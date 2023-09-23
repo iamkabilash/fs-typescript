@@ -5,7 +5,7 @@ export interface NoteDocument {
   description?: string;
 }
 
-const noteSchema = new Schema({
+const NoteSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -17,4 +17,4 @@ const noteSchema = new Schema({
   },
 });
 
-export default model<NoteDocument>("Note", noteSchema);
+export default model<NoteDocument>("Note", NoteSchema);

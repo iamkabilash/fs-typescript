@@ -1,6 +1,6 @@
 import express from "express";
 import "./db";
-import Note, { NoteDocument } from "./models/note";
+import noteRouter from "./routers/note.router";
 
 const app = express();
 app.use(express.json());
@@ -19,53 +19,7 @@ app.use(
 );
 **/
 
-app.post("/", (req, res) => {
-  console.log(req.body);
-  res.send({ hello: "world" });
-});
-
-app.post("/create", async (req, res) => {
-  // const newNote = new Note<NoteDocument>({
-  //   title: (req.body as NoteDocument).title,
-  //   description: (req.body as NoteDocument).description,
-  // });
-  // await newNote.save();
-  // res.send({ saved: true });
-
-  await Note.create<NoteDocument>({
-    title: (req.body as NoteDocument).title,
-    description: (req.body as NoteDocument).description,
-  });
-  res.send({ saved: true });
-});
-
-app.patch("/:id", async (req, res) => {
-  const id = req.params.id;
-  const { title, description } = req.body as NoteDocument;
-
-  // const note = await Note.findById(id);
-  // if (!note) return res.json({ error: "Note not found" });
-  // note.title = (req.body as NoteDocument).title;
-  // note.description = (req.body as NoteDocument).description;
-
-  const note = Note.findByIdAndUpdate(
-    id,
-    { title, description },
-    { new: true } // returns updated data as response.
-  );
-  if (!note) return res.json({ error: "Note not found" });
-
-  res.send({ updated: true });
-});
-
-app.delete("/:id", async (req, res) => {
-  const id = req.params.id;
-
-  const note = Note.findByIdAndDelete(id);
-  if (!note) return res.json({ error: "Note not found" });
-
-  res.send({ deleted: true });
-});
+app.use("/note", noteRouter); // adds a prefix to "/" and noteRouter works only for "/note/ route"
 
 app.listen(8000, () => {
   console.log("server running...");
